@@ -1,10 +1,29 @@
 ---
+- name: yum install virtualization rpms
+  yum: name="@virtualization" state=present
+
+- name: ensure libvirtd is running
+  service: name=libvirtd state=started
+
+- name: determine if libvirt network spinalstack is present
+  shell: "virsh net-list | grep spinalstack"
+  register: spinalstack_net
+
 - name: Copy network configuration on the host
   copy: src=spinalstack.xml
         dest=/tmp/spinalstack.xml
+  when: spinalstack_net.rc == 1
 
 - name: Configure the network
   command: virsh net-create /tmp/spinalstack.xml
+  when: spinalstack_net.rc == 1
+
+- name: Undefine the  domains
+  virt: name={{ item }}
+        command=undefine
+        uri=qemu:///system
+        xml="{{ lookup('file',  item + '.xml') }}"
+  with_items: nodes
 
 - name: Configure the different domains
   virt: name={{ item }}
@@ -12,7 +31,7 @@
         uri=qemu:///system
         xml="{{ lookup('file',  item + '.xml') }}"
   with_items: nodes
-  
+
 - name: Start the domains
   virt: name={{ item }}
         state=running
