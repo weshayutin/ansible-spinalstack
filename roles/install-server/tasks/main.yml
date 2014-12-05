@@ -31,7 +31,8 @@
     - openstack-yaml-infra
     - puppet-openstack-cloud
     - openstack-serverspec
-    - config-tools 
+    - config-tools
+    - jjb-openstack
 
 - name: Retrieve JJB jobs
   git:  repo=https://github.com/enovance/{{ item }}.git

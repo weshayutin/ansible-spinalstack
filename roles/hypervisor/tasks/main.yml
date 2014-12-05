@@ -8,6 +8,7 @@
 - name: determine if libvirt network spinalstack is present
   shell: "virsh net-list | grep spinalstack"
   register: spinalstack_net
+  ignore_errors: true
 
 - name: Copy network configuration on the host
   copy: src=spinalstack.xml
@@ -24,6 +25,7 @@
         uri=qemu:///system
         xml="{{ lookup('file',  item + '.xml') }}"
   with_items: nodes
+  ignore_errors: true
 
 - name: Configure the different domains
   virt: name={{ item }}
