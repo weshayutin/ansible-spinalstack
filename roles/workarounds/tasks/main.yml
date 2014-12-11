@@ -1,0 +1,9 @@
+---
+- name: install mariadb on openstack nodes
+  yum: name={{item}} state=present
+  with_items:
+    - mariadb-galera-server
+    - mariadb
+    - mariadb-galera-common
+    - mariadb-libs
+

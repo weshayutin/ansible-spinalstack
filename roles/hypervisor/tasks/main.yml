@@ -27,6 +27,10 @@
   with_items: nodes
   ignore_errors: true
 
+- name: create hosts file
+  copy: src=hosts
+        dest=/etc/hosts
+
 - name: Configure the different domains
   virt: name={{ item }}
         command=define
