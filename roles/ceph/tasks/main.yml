@@ -1,0 +1,83 @@
+---
+- name: Create the disks
+  command: qemu-img create -f qcow2 /var/lib/libvirt/images/{{ item }}.img 10G
+  with_items:
+    - openstack1-ceph41
+    - openstack1-ceph42
+    - openstack1-ceph43
+    - openstack2-ceph41
+    - openstack2-ceph42
+    - openstack2-ceph43
+    - openstack3-ceph41
+    - openstack3-ceph42
+    - openstack3-ceph43
+
+- name: create ceph dir
+  file: path=~/ceph state=directory
+
+- name: create ceph device xml
+  template:
+    src=ceph-c.j2
+    dest=~/ceph/{{ item }}.xml
+  with_items:
+    - openstack1-ceph41
+    - openstack2-ceph41
+    - openstack3-ceph41
+
+- name: create ceph device xml
+  template:
+    src=ceph-d.j2
+    dest=~/ceph/{{ item }}.xml
+  with_items:
+    - openstack1-ceph42
+    - openstack2-ceph42
+    - openstack3-ceph42
+
+- name: create ceph device xml
+  template:
+    src=ceph-e.j2
+    dest=~/ceph/{{ item }}.xml
+  with_items:
+    - openstack1-ceph43
+    - openstack2-ceph43
+    - openstack3-ceph43
+
+
+- name: Load the disks openstack1
+  command: virsh attach-device openstack1 ~/ceph/{{ item }}.xml
+  with_items:
+    - openstack1-ceph41
+    - openstack1-ceph42
+    - openstack1-ceph43
+  register: command_result
+  ignore_errors: yes
+
+- name: fail openstack1-ceph
+  fail: msg="the command failed"
+  when: not "'already exists' in command_result.stderr"
+
+- name: Load the disks openstack2
+  command: virsh attach-device openstack2 ~/ceph/{{ item }}.xml
+  with_items:
+    - openstack2-ceph41
+    - openstack2-ceph42
+    - openstack2-ceph43
+  register: command_result
+  ignore_errors: yes
+
+- name: fail openstack2-ceph
+  fail: msg="the command failed"
+  when: not "'already exists' in command_result.stderr"
+
+- name: Load the disks openstack3
+  command: virsh attach-device openstack3 ~/ceph/{{ item }}.xml
+  with_items:
+    - openstack3-ceph41
+    - openstack3-ceph42
+    - openstack3-ceph43
+  register: command_result
+  ignore_errors: yes
+
+- name: fail openstack3-ceph
+  fail: msg="the command failed"
+  when: not "'already exists' in command_result.stderr"

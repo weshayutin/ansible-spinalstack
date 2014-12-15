@@ -3,6 +3,10 @@
   roles:
     - hypervisor
 
+- hosts: localhost
+  roles:
+    - ceph
+
 - hosts: openstack-nodes
   roles:
     - openstack-node

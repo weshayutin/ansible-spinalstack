@@ -4,3 +4,8 @@ nodes:
   - openstack1
   - openstack2
   - openstack3
+
+devices:
+  - c
+  - d
+  - e

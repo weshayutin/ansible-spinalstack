@@ -71,13 +71,13 @@
   shell: jenkins-jobs update --delete-old /etc/jenkins_jobs/jobs
 
 - name: Create necessary folder
-  command: bash -c "merge.py /tmp/openstack-yaml-infra/scenarios/3nodes_cephless/infra.yaml /tmp/spinalstack-env/3nodes.yaml > /etc/config-tools/global.yml"
+  command: bash -c "merge.py /tmp/openstack-yaml-infra/scenarios/3nodes/infra.yaml /tmp/spinalstack-env/3nodes.yaml > /etc/config-tools/global.yml"
 
 - name: Update /etc/config-tools/global.yml
   lineinfile:
       "dest=/etc/config-tools/global.yml
       regexp='^infra: 3nodes'
-      line='infra: 3nodes_cephless'"
+      line='infra: 3nodes'"
 
 - name: Create necessary folder
   command: bash -c "generate.py 0 /etc/config-tools/global.yml /tmp/config-tools/config.tmpl > /etc/config-tools/config"
