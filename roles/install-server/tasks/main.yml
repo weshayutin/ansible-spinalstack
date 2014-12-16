@@ -24,12 +24,17 @@
   copy: src=hosts
         dest=/etc/hosts
 
+- name: Retrieve puppet-openstack-cloud (eNovance)
+  git:  repo=https://github.com/enovance/{{ item }}.git
+        dest=/tmp/{{ item }}
+  with_items:
+    - puppet-openstack-cloud
+
 - name: Retrieve public repositories (eNovance)
   git:  repo=https://github.com/enovance/{{ item }}.git
         dest=/tmp/{{ item }}
   with_items:
     - openstack-yaml-infra
-    - puppet-openstack-cloud
     - openstack-serverspec
     - config-tools
     - jjb-openstack
@@ -117,4 +122,7 @@
    hiera_include('classes')\n
    "
     dest=/etc/puppet/manifests/site.pp
+
+- name: drop in hiera.yaml
+  copy: src=hiera.yaml dest=/etc/puppet/
 

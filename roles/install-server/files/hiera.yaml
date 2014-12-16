@@ -1,0 +1,11 @@
+---
+:backends:
+  - yaml
+:logger: console
+:hierarchy:
+  - "%{::type}/%{::fqdn}"
+  - "%{::type}/common"
+  - common
+
+:yaml:
+   :datadir: /etc/puppet/data
