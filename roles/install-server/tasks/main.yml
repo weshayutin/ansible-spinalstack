@@ -37,7 +37,9 @@
     - openstack-yaml-infra
     - openstack-serverspec
     - config-tools
-    - jjb-openstack
+
+- name: Install autojenkins pip
+  pip: name=autojenkins
 
 - name: Retrieve JJB jobs
   git:  repo=https://github.com/enovance/{{ item }}.git
@@ -123,6 +125,14 @@
    "
     dest=/etc/puppet/manifests/site.pp
 
+#Check and see if this is stilll required
 - name: drop in hiera.yaml
   copy: src=hiera.yaml dest=/etc/puppet/
+
+- name: Enable launch-job script
+  copy: src=launch-job.py
+        dest=/bin/launch-job.py
+        mode=0755
+- name: Launch CI jobs
+  shell: launch-job.py http://installserver.example.com:8282/ puppet
 

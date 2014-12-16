@@ -5,12 +5,15 @@
     - openstack1-ceph41
     - openstack1-ceph42
     - openstack1-ceph43
+    - openstack1-ceph44
     - openstack2-ceph41
     - openstack2-ceph42
     - openstack2-ceph43
+    - openstack2-ceph44
     - openstack3-ceph41
     - openstack3-ceph42
     - openstack3-ceph43
+    - openstack3-ceph44
 
 - name: create ceph dir
   file: path=~/ceph state=directory
@@ -42,6 +45,14 @@
     - openstack2-ceph43
     - openstack3-ceph43
 
+- name: create ceph device xml
+  template:
+    src=ceph-f.j2
+    dest=~/ceph/{{ item }}.xml
+  with_items:
+    - openstack1-ceph44
+    - openstack2-ceph44
+    - openstack3-ceph44
 
 - name: Load the disks openstack1
   command: virsh attach-device openstack1 ~/ceph/{{ item }}.xml
@@ -49,6 +60,7 @@
     - openstack1-ceph41
     - openstack1-ceph42
     - openstack1-ceph43
+    - openstack1-ceph44
   register: command_result
   ignore_errors: yes
 
@@ -62,6 +74,7 @@
     - openstack2-ceph41
     - openstack2-ceph42
     - openstack2-ceph43
+    - openstack2-ceph44
   register: command_result
   ignore_errors: yes
 
@@ -75,6 +88,7 @@
     - openstack3-ceph41
     - openstack3-ceph42
     - openstack3-ceph43
+    - openstack3-ceph44
   register: command_result
   ignore_errors: yes
 

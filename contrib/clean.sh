@@ -30,6 +30,7 @@ do
   virsh undefine $node
   rm -f $image_path/${node}.qcow2
 done
+rm -Rf $image_path/*ceph*
 
 #
 # Remove and network
